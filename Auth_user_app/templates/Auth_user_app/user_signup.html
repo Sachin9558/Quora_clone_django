@@ -1,0 +1,88 @@
+{% extends "Auth_user_app/base.html" %}
+{% load static %}
+
+{% block title %}Signup{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow rounded">
+            <div class="card-body p-4">
+                <h2 class="card-title text-center mb-4">Sign Up</h2>
+                    <!-- ✅ Message block -->
+                    {% if messages %}
+                    <div class="mb-3">
+                    {% for message in messages %}
+                        <div 
+                        class="alert {% if message.tags == 'success' %}alert-success
+                                    {% elif message.tags == 'error' %}alert-danger
+                                    {% elif message.tags == 'warning' %}alert-warning
+                                    {% elif message.tags == 'info' %}alert-info
+                                    {% else %}alert-secondary{% endif %} alert-dismissible fade show" 
+                        role="alert"
+                        >
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+                <form method="POST" action="">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="first_name" class="form-label">First Name</label>
+                    <input type="text" name="fname" class="form-control" placeholder="Enter your first name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="last_name" class="form-label">Last Name</label>
+                    <input type="text" name="lname" class="form-control" placeholder="Enter your last name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" name="username" class="form-control" placeholder="Choose a username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="Choose a password" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                </div>
+                </form>
+                <p class="mt-3 text-center">
+                Already have an account? 
+                <a href="{% url 'login' %}" class="text-decoration-none">Login here</a>
+                </p>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        // Wait for DOM to load
+        document.addEventListener("DOMContentLoaded", function () {
+          setTimeout(function () {
+            const alerts = document.querySelectorAll(".alert");
+            alerts.forEach(function (alert) {
+              // Fade out (optional)
+              alert.classList.remove("show");
+              alert.classList.add("fade");
+      
+              // Remove after transition
+              setTimeout(() => {
+                alert.remove();
+              }, 500); // Wait for fade transition to finish
+            });
+          }, 2000); // 2 seconds
+        });
+      </script>
+      
+{% endblock content %}
+
+

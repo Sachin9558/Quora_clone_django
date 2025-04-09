@@ -1,0 +1,34 @@
+{% extends "Auth_user_app/base.html" %}
+
+{% block title %}Login{% endblock %}
+{% block content %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card shadow rounded">
+          <div class="card-body p-4">
+            <h2 class="card-title text-center mb-4">Login</h2>
+            <form method="POST">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" placeholder="Enter your username" required>
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
+              </div>
+              <div class="d-grid">
+                <button type="submit" class="btn btn-success">Login</button>
+              </div>
+            </form>
+            <p class="mt-3 text-center">
+              Don't have an account? 
+              <a href="{% url 'signup' %}" class="text-decoration-none">Sign up here</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

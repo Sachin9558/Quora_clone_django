@@ -1,0 +1,105 @@
+{% extends 'questions/base.html' %}
+
+{% block title %}All Questions{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Recent Questions</h2>
+  <a href="{% url 'ask_question' %}" class="btn btn-primary">Ask a New Question</a>
+</div>
+
+{% for question in questions %}
+  <div class="card mb-3 shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">{{ question.title }}</h5>
+      <p class="card-text text-muted">Asked by {{ question.author.username }} on {{ question.created_at|date:"M d, Y H:i" }}</p>
+      <p class="card-text">{{ question.body|truncatechars:200 }}</p>
+
+      <!-- View / Answer Button -->
+      <a href="{% url 'answer_question' question.id %}" class="btn btn-outline-primary btn-sm mt-2">Add your Answer</a>
+    </div>
+
+    <!-- Answers Section -->
+
+      {% if question.answer_set.all %}
+      <div class="card-footer bg-light">
+        <h6 class="text-muted mb-2">Answers:</h6>
+        <ul class="list-unstyled ps-3">
+    
+          {% for answer in question.answer_set.all|slice:":2" %}
+            <li class="mb-2">
+              {{ answer.body|linebreaksbr }}
+              <br><strong>Answered by {{ answer.author.username }} | Likes: {{ answer.likes.count }} | Dislikes: {{answer.dislikes.count}}</strong>
+              <br><small class="text-muted">{{ answer.created_at|date:"M d, Y H:i" }}</small>
+              <p>{{ answer.discription }}</p>
+                <!-- Like / Dislike Icons -->
+                <form action="{% url 'like_answer' answer.id %}" method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm {% if user in answer.likes.all %}btn-success{% else %}btn-outline-success{% endif %}">
+                    👍
+                  </button>
+                </form>
+
+                <form action="{% url 'dislike_answer' answer.id %}" method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm {% if user in answer.dislikes.all %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                    👎
+                  </button>
+                </form>
+            </li>
+          {% endfor %}
+    
+          {% if question.answer_set.count > 2 %}
+            <!-- Hidden answers -->
+            <div id="more-answers-{{ question.id }}" style="display: none;">
+              {% for answer in question.answer_set.all|slice:"2:" %}
+                <li class="mb-2">
+                  {{ answer.body|linebreaksbr }}
+                  <br><strong>Answered by {{ answer.author.username }} | Likes: {{ answer.likes.count }}</strong>
+                  <br><small class="text-muted">{{ answer.created_at|date:"M d, Y H:i" }}</small>
+                  <p>{{ answer.discription }}</p>
+                   <!-- Like / Dislike Icons -->
+                  <form action="{% url 'like_answer' answer.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm {% if user in answer.likes.all %}btn-success{% else %}btn-outline-success{% endif %}">
+                      👍
+                    </button>
+                  </form>
+
+                  <form action="{% url 'dislike_answer' answer.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm {% if user in answer.dislikes.all %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                      👎
+                    </button>
+                  </form>
+                </li>
+              {% endfor %}
+            </div>
+    
+            <!-- Toggle Button -->
+            <button class="btn btn-link p-0 mt-2" onclick="toggleAnswers('{{ question.id }}')">Show all answers</button>
+          {% endif %}
+    
+        </ul>
+      </div>
+    {% endif %}
+  
+  </div>
+{% empty %}
+  <p class="text-muted">No questions have been asked yet. Be the first one!</p>
+{% endfor %}
+  <script>
+    function toggleAnswers(questionId) {
+      const section = document.getElementById('more-answers-' + questionId);
+      if (section.style.display === 'none') {
+        section.style.display = 'block';
+        event.target.textContent = 'Show less';
+      } else {
+        section.style.display = 'none';
+        event.target.textContent = 'Show all answers';
+      }
+    }
+  </script>
+{% endblock %}
+
+

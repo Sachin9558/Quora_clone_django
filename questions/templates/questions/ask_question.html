@@ -1,0 +1,29 @@
+<!-- templates/question/ask_question.html -->
+{% extends 'questions/base.html' %}
+
+{% block title %}Ask a Question{% endblock %}
+
+{% block content %}
+<div class="card shadow rounded">
+  <div class="card-body p-4">
+    <h2 class="card-title mb-4 text-center">Ask a New Question</h2>
+    <form method="POST" action="{% url 'ask_question' %}">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input type="text" name="title" class="form-control" placeholder="Enter a clear and specific title" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Discription</label>
+        <textarea name="body" class="form-control" rows="6" placeholder="Explain your question in detail" required></textarea>
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-success">Post Question</button>
+      </div>
+    </form>
+    <div class="mt-3 text-center">
+      <a href="{% url 'question_list' %}" class="text-decoration-none">← Back to Questions</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
