@@ -3,3 +3,6 @@
 
 # Ignore virtual environment
 env1/
+
+# Ignore SSH-related files
+known_hosts*
